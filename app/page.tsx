@@ -458,7 +458,7 @@ export default function MenuPage() {
                 </button>
               </div>
             ))}
-            <p className={styles.total}>合計: {totalAmount}円</p>
+            <p className={styles.total}>合計: {totalAmount}円(税込)</p>
             <button
               className={styles.confirmButton}
               onClick={handleConfirmOrder}

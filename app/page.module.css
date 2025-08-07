@@ -415,13 +415,44 @@
   max-width: 1400px;
   margin: 0 auto;
   min-height: 100vh;
+  background-color: #f5ece1; /* Warm cream background */
+  font-family: "Arial", sans-serif;
+  background-image: url("/images/cafe-background.jpg"); /* Add cafe background */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  position: relative;
+}
+
+.container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(
+    245,
+    236,
+    225,
+    0.8
+  ); /* Overlay to improve text readability */
+  z-index: 0;
+}
+
+.menuList,
+.cart,
+.modal {
+  position: relative;
+  z-index: 1;
 }
 
 .menuList {
   flex: 3;
   padding: 1.5rem;
-  background-color: #f9fafb;
+  background-color: #ffffff;
   border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(74, 44, 42, 0.1);
 }
 
 .branding {
@@ -450,10 +481,11 @@
   font-weight: bold;
   margin-bottom: 2rem;
   text-align: center;
-  color: #1f2937;
+  color: #4a2c2a;
   padding: 0.5rem 1rem;
-  background-color: #e0f2e9;
+  background-color: #e8d8c8;
   border-radius: 8px;
+  font-family: "Georgia", serif;
 }
 
 .categoryBar {
@@ -466,21 +498,22 @@
 
 .categoryButton {
   padding: 0.5rem 1rem;
-  background-color: #e5e7eb;
+  background-color: #a3bffa;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  color: #4a2c2a;
 }
 
 .categoryButton:hover {
-  background-color: #d1d5db;
+  background-color: #8fafe6;
 }
 
 .activeCategory {
-  background-color: #10b981;
-  color: white;
+  background-color: #4a2c2a;
+  color: #ffffff;
 }
 
 .list {
@@ -495,14 +528,14 @@
   background-color: #ffffff;
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(74, 44, 42, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
 }
 
 .item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(74, 44, 42, 0.15);
 }
 
 .menuImage {
@@ -512,13 +545,16 @@
   border-radius: 10px;
   margin: 0 auto 1rem;
   display: block;
+  border: 2px solid #e8d8c8;
+  max-width: 100%;
+  height: auto;
 }
 
 .name {
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0.5rem 0;
-  color: #111827;
+  color: #4a2c2a;
 }
 
 .comment {
@@ -537,8 +573,8 @@
 }
 
 .quantityButton {
-  background-color: #e5e7eb;
-  color: #374151;
+  background-color: #a3bffa;
+  color: #4a2c2a;
   border: none;
   border-radius: 6px;
   width: 2rem;
@@ -549,24 +585,24 @@
 }
 
 .quantityButton:hover {
-  background-color: #d1d5db;
+  background-color: #8fafe6;
 }
 
 .quantityDisplay {
   font-size: 1.1rem;
   width: 3rem;
   text-align: center;
-  color: #374151;
+  color: #4a2c2a;
 }
 
 .addButton {
-  background-color: #10b981;
+  background-color: #a3bffa;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   font-weight: 500;
   border: none;
   border-radius: 8px;
-  color: white;
+  color: #4a2c2a;
   cursor: pointer;
   transition: background-color 0.2s ease;
   margin-top: 0.5rem;
@@ -574,13 +610,13 @@
 }
 
 .addButton:hover {
-  background-color: #059669;
+  background-color: #8fafe6;
 }
 
 .separator {
   margin: 1.5rem 0;
   border: none;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e8d8c8;
 }
 
 .cart {
@@ -588,14 +624,15 @@
   padding: 1.5rem;
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(74, 44, 42, 0.1);
 }
 
 .cartTitle {
   font-size: 1.8rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
-  color: #dc2626;
+  color: #4a2c2a;
+  font-family: "Georgia", serif;
 }
 
 .empty {
@@ -610,7 +647,9 @@
   gap: 1rem;
   margin-bottom: 1rem;
   padding: 0.75rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e8d8c8;
+  background-color: #fafafa;
+  border-radius: 6px;
 }
 
 .cartImage {
@@ -618,12 +657,14 @@
   height: 80px;
   object-fit: cover;
   border-radius: 8px;
+  max-width: 100%;
+  height: auto;
 }
 
 .cartName {
   font-size: 1.2rem;
   font-weight: 500;
-  color: #111827;
+  color: #4a2c2a;
   flex: 1;
 }
 
@@ -645,15 +686,17 @@
 .total {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #111827;
+  color: #4a2c2a;
   text-align: right;
   margin: 1.5rem 0;
+  border-top: 2px solid #a3bffa;
+  padding-top: 1rem;
 }
 
 .confirmButton {
   width: 100%;
-  background-color: #3b82f6;
-  color: white;
+  background-color: #a3bffa;
+  color: #4a2c2a;
   padding: 0.75rem;
   border: none;
   border-radius: 8px;
@@ -664,7 +707,7 @@
 }
 
 .confirmButton:hover {
-  background-color: #2563eb;
+  background-color: #8fafe6;
 }
 
 .clearCartButton {
@@ -702,7 +745,7 @@
   background-color: #ffffff;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px rgba(74, 44, 42, 0.2);
   text-align: center;
   max-width: 500px;
   width: 90%;
@@ -711,14 +754,15 @@
 .modalTitle {
   font-size: 2rem;
   font-weight: bold;
-  color: #1f2937;
+  color: #4a2c2a;
   margin-bottom: 1.5rem;
+  font-family: "Georgia", serif;
 }
 
 .backButton {
   padding: 0.75rem 1.5rem;
-  background-color: #3b82f6;
-  color: white;
+  background-color: #a3bffa;
+  color: #4a2c2a;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -728,7 +772,7 @@
 }
 
 .backButton:hover {
-  background-color: #2563eb;
+  background-color: #8fafe6;
 }
 
 /* Responsive Design */
@@ -744,7 +788,7 @@
 
   .cart {
     border-left: none;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #e8d8c8;
     border-radius: 8px;
   }
 
@@ -754,7 +798,7 @@
 
   .menuImage {
     width: 200px;
-    height: 200px;
+    height: auto;
   }
 
   .title {
@@ -777,7 +821,7 @@
 
   .cartImage {
     width: 60px;
-    height: 60px;
+    height: auto;
   }
 
   .modal {
@@ -790,7 +834,7 @@
 
   .logo {
     width: 80px;
-    height: 80px;
+    height: auto;
   }
 }
 
