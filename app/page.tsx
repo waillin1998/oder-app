@@ -1,234 +1,19 @@
-// "use client";
-
-// import { useState, useEffect } from "react";
-// import Link from "next/link";
-// import Image from "next/image";
-// import styles from "./page.module.css";
-
-// const MENU_API_URL = "https://4aj9xibpc7.microcms.io/api/v1/menu";
-
-// type MenuItem = {
-//   id: string;
-//   name: string;
-//   price: number;
-//   comment?: string;
-//   image?: {
-//     url: string;
-//     width: number;
-//     height: number;
-//   };
-//   quantity?: number;
-// };
-
-// export default function MenuPage() {
-//   const [menu, setMenu] = useState<MenuItem[]>([]);
-//   const [cart, setCart] = useState<MenuItem[]>([]);
-//   const [quantities, setQuantities] = useState<{ [id: string]: number }>({});
-
-//   useEffect(() => {
-//     // Fetch menu
-//     fetch(MENU_API_URL, {
-//       headers: {
-//         "X-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY || "",
-//       },
-//     })
-//       .then((res) => res.json())
-//       .then((data) => {
-//         const parsedMenu = data.contents.map((item: any) => ({
-//           ...item,
-//           price: Number(item.price), // 👈 Convert to number here
-//         }));
-//         setMenu(parsedMenu);
-//       });
-
-//     // Restore cart
-//     const saved = localStorage.getItem("cart");
-//     if (saved) {
-//       const parsedCart = JSON.parse(saved).map((item: MenuItem) => ({
-//         ...item,
-//         quantity: Number(item.quantity) || 1,
-//       }));
-//       setCart(parsedCart);
-//     }
-//   }, []);
-
-//   // Quantity input handler
-//   const handleQuantityChange = (id: string, qty: number) => {
-//     setQuantities((prev) => ({
-//       ...prev,
-//       [id]: qty > 0 ? qty : 1,
-//     }));
-//   };
-
-//   // Add these two functions inside MenuPage component, after useEffect
-//   const increaseQuantity = (id: string) => {
-//     setQuantities((prev) => ({
-//       ...prev,
-//       [id]: (prev[id] || 1) + 1,
-//     }));
-//   };
-
-//   const decreaseQuantity = (id: string) => {
-//     setQuantities((prev) => ({
-//       ...prev,
-//       [id]: Math.max((prev[id] || 1) - 1, 1),
-//     }));
-//   };
-
-//   // Add to cart
-//   const addToCart = (item: MenuItem) => {
-//     const quantity = Number(quantities[item.id]) || 1;
-//     const updated = [...cart, { ...item, quantity }];
-//     setCart(updated);
-//     localStorage.setItem("cart", JSON.stringify(updated));
-//   };
-
-//   // Remove item
-//   const removeFromCart = (index: number) => {
-//     const updated = [...cart];
-//     updated.splice(index, 1);
-//     setCart(updated);
-//     localStorage.setItem("cart", JSON.stringify(updated));
-//   };
-
-//   // Clear cart
-//   const clearCart = () => {
-//     setCart([]);
-//     localStorage.removeItem("cart");
-//   };
-
-//   const totalAmount = cart.reduce(
-//     (sum, item) => sum + item.price * (Number(item.quantity) || 1),
-//     0
-//   );
-
-//   return (
-//     <div className={styles.container}>
-//       {/* Menu List */}
-//       <main className={styles.menuList}>
-//         <h1 className={styles.title}>メニュー一覧</h1>
-//         <ul className={styles.list}>
-//           {menu.map((item) => (
-//             <li key={item.id} className={styles.item}>
-//               {item.image && (
-//                 <Image
-//                   src={item.image.url}
-//                   alt={item.name}
-//                   width={item.image.width}
-//                   height={item.image.height}
-//                   className={styles.menuImage}
-//                 />
-//               )}
-//               <p className={styles.name}>
-//                 {item.name} — {item.price}円
-//               </p>
-
-//               <div className={styles.quantityControls}>
-//                 <button
-//                   onClick={() => decreaseQuantity(item.id)}
-//                   className={styles.quantityButton}
-//                 >
-//                   -
-//                 </button>
-//                 <span className={styles.quantityDisplay}>
-//                   {quantities[item.id] || 1}
-//                 </span>
-//                 <button
-//                   onClick={() => increaseQuantity(item.id)}
-//                   className={styles.quantityButton}
-//                 >
-//                   +
-//                 </button>
-//               </div>
-
-//               <button
-//                 className={styles.addButton}
-//                 onClick={() => addToCart(item)}
-//               >
-//                 追加
-//               </button>
-
-//               {item.comment && <p className={styles.comment}>{item.comment}</p>}
-//               <hr className={styles.separator} />
-//             </li>
-//           ))}
-//         </ul>
-
-//         <Link href="/cart" className={styles.checkoutLink}>
-//           注文確認へ進む
-//         </Link>
-//       </main>
-
-//       {/* Cart Section */}
-//       <aside className={styles.cart}>
-//         <h2 className={styles.cartTitle}>注文状況</h2>
-//         {cart.length === 0 ? (
-//           <p className={styles.empty}>まだ注文はありません。</p>
-//         ) : (
-//           <>
-//             {cart.map((item, i) => (
-//               <div key={`${item.id}-${i}`} className={styles.cartItem}>
-//                 {item.image && (
-//                   <Image
-//                     src={item.image.url}
-//                     alt={item.name}
-//                     width={60}
-//                     height={40}
-//                     className={styles.cartImage}
-//                   />
-//                 )}
-//                 <p className={styles.cartName}>
-//                   {item.name} × {Number(item.quantity) || 1} —{" "}
-//                   {item.price * (Number(item.quantity) || 1)}円
-//                 </p>
-//                 <button
-//                   className={styles.removeButton}
-//                   onClick={() => removeFromCart(i)}
-//                 >
-//                   削除
-//                 </button>
-//               </div>
-//             ))}
-
-//             <p className={styles.total}>合計: {totalAmount}円</p>
-
-//             <button
-//               className={styles.confirmButton}
-//               onClick={() => {
-//                 localStorage.removeItem("cart");
-//                 setCart([]);
-//                 window.location.href = "/thankyou";
-//               }}
-//             >
-//               注文を確定する
-//             </button>
-
-//             <button className={styles.clearCartButton} onClick={clearCart}>
-//               カートを全て削除
-//             </button>
-//           </>
-//         )}
-//       </aside>
-//     </div>
-//   );
-// }
-
 "use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
 
-// Updated URL for the logo (place the edited logo as 'public/logo.png')
 const LOGO_URL = "/images/logo.png";
-
 const MENU_API_URL = "https://4aj9xibpc7.microcms.io/api/v1/menu";
 
 type MenuItem = {
   id: string;
-  name: string;
+  name_ja: string;
+  name_en: string;
   price: number;
-  comment?: string;
+  comment_ja?: string;
+  comment_en?: string;
   image?: {
     url: string;
     width: number;
@@ -244,9 +29,10 @@ export default function MenuPage() {
   const [quantities, setQuantities] = useState<{ [id: string]: number }>({});
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [language, setLanguage] = useState<"ja" | "en">("ja");
 
+  // Fetch menu & restore cart
   useEffect(() => {
-    // Fetch menu
     fetch(MENU_API_URL, {
       headers: {
         "X-API-KEY": process.env.NEXT_PUBLIC_MICROCMS_API_KEY || "",
@@ -257,12 +43,11 @@ export default function MenuPage() {
         const parsedMenu = data.contents.map((item: any) => ({
           ...item,
           price: Number(item.price),
-          category: assignCategory(item.name), // Assign category based on name
+          category: assignCategory(item.name_ja),
         }));
         setMenu(parsedMenu);
       });
 
-    // Restore cart
     const saved = localStorage.getItem("cart");
     if (saved) {
       const parsedCart = JSON.parse(saved).map((item: MenuItem) => ({
@@ -273,28 +58,23 @@ export default function MenuPage() {
     }
   }, []);
 
-  // Function to assign categories based on item name
   const assignCategory = (name: string): string => {
     if (
       name.includes("カフェラテ") ||
       name.includes("エスプレッソ") ||
       name.includes("カフェモカ") ||
-      name.includes("カプチーノ ") ||
+      name.includes("カプチーノ") ||
       name.includes("アメリカーノ") ||
       name.includes("ブレンドコーヒー")
     )
       return "飲み物";
     if (name.includes("ケーキ") || name.includes("デザート")) return "デザート";
-    return "全て"; // Default category
+    return "全て";
   };
 
   const increaseQuantity = (id: string) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [id]: (prev[id] || 1) + 1,
-    }));
+    setQuantities((prev) => ({ ...prev, [id]: (prev[id] || 1) + 1 }));
   };
-
   const decreaseQuantity = (id: string) => {
     setQuantities((prev) => ({
       ...prev,
@@ -325,18 +105,15 @@ export default function MenuPage() {
     setCart(updated);
     localStorage.setItem("cart", JSON.stringify(updated));
   };
-
   const clearCart = () => {
     setCart([]);
     localStorage.removeItem("cart");
   };
-
   const handleConfirmOrder = () => {
     setIsConfirmed(true);
     localStorage.removeItem("cart");
     setCart([]);
   };
-
   const handleBackToMenu = () => {
     setIsConfirmed(false);
     setCart([]);
@@ -348,13 +125,16 @@ export default function MenuPage() {
     0
   );
 
-  // Define fixed categories
-  const categories = ["全て", "飲み物", "デザート"];
+  const categories =
+    language === "ja"
+      ? ["全て", "飲み物", "デザート"]
+      : ["All", "Drinks", "Desserts"];
 
-  // Filter menu items based on selected category
   const filteredMenu = selectedCategory
     ? menu.filter((item) =>
-        selectedCategory === "全て" ? true : item.category === selectedCategory
+        selectedCategory === (language === "ja" ? "全て" : "All")
+          ? true
+          : item.category === selectedCategory
       )
     : menu;
 
@@ -369,8 +149,42 @@ export default function MenuPage() {
             height={100}
             className={styles.logo}
           />
-          <h1 className={styles.title}>メニュー一覧</h1>
+          <h1 className={styles.title}>
+            {language === "ja" ? "メニュー一覧" : "Menu"}
+          </h1>
         </div>
+
+        {/* Language toggle */}
+        <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+          <button
+            style={{
+              marginRight: "0.5rem",
+              padding: "0.5rem 1rem",
+              cursor: "pointer",
+              backgroundColor: language === "ja" ? "#4a2c2a" : "#a3bffa",
+              color: language === "ja" ? "#fff" : "#4a2c2a",
+              border: "none",
+              borderRadius: "6px",
+            }}
+            onClick={() => setLanguage("ja")}
+          >
+            JP
+          </button>
+          <button
+            style={{
+              padding: "0.5rem 1rem",
+              cursor: "pointer",
+              backgroundColor: language === "en" ? "#4a2c2a" : "#a3bffa",
+              color: language === "en" ? "#fff" : "#4a2c2a",
+              border: "none",
+              borderRadius: "6px",
+            }}
+            onClick={() => setLanguage("en")}
+          >
+            EN
+          </button>
+        </div>
+
         {/* Category Bar */}
         <div className={styles.categoryBar}>
           {categories.map((category) => (
@@ -385,20 +199,24 @@ export default function MenuPage() {
             </button>
           ))}
         </div>
+
         <ul className={styles.list}>
           {filteredMenu.map((item) => (
             <li key={item.id} className={styles.item}>
               {item.image && (
-                <Image
-                  src={item.image.url}
-                  alt={item.name}
-                  width={250}
-                  height={250}
-                  className={styles.menuImage}
-                />
+                <div className={styles.imageWrapper}>
+                  <Image
+                    src={item.image.url}
+                    alt={language === "ja" ? item.name_ja : item.name_en}
+                    width={250}
+                    height={250}
+                    className={styles.menuImage}
+                  />
+                </div>
               )}
               <p className={styles.name}>
-                {item.name} — {item.price}円
+                {language === "ja" ? item.name_ja : item.name_en} — {item.price}
+                円
               </p>
               <div className={styles.quantityControls}>
                 <button
@@ -421,18 +239,31 @@ export default function MenuPage() {
                 className={styles.addButton}
                 onClick={() => addToCart(item)}
               >
-                追加
+                {language === "ja" ? "追加" : "Add"}
               </button>
-              {item.comment && <p className={styles.comment}>{item.comment}</p>}
+              {language === "ja"
+                ? item.comment_ja && (
+                    <p className={styles.comment}>{item.comment_ja}</p>
+                  )
+                : item.comment_en && (
+                    <p className={styles.comment}>{item.comment_en}</p>
+                  )}
               <hr className={styles.separator} />
             </li>
           ))}
         </ul>
       </main>
+
       <aside className={styles.cart}>
-        <h2 className={styles.cartTitle}>注文状況</h2>
+        <h2 className={styles.cartTitle}>
+          {language === "ja" ? "注文状況" : "Cart"}
+        </h2>
         {cart.length === 0 ? (
-          <p className={styles.empty}>まだ注文はありません。</p>
+          <p className={styles.empty}>
+            {language === "ja"
+              ? "まだ注文はありません。"
+              : "Your cart is empty."}
+          </p>
         ) : (
           <>
             {cart.map((item, i) => (
@@ -440,45 +271,52 @@ export default function MenuPage() {
                 {item.image && (
                   <Image
                     src={item.image.url}
-                    alt={item.name}
+                    alt={language === "ja" ? item.name_ja : item.name_en}
                     width={80}
                     height={80}
                     className={styles.cartImage}
                   />
                 )}
                 <p className={styles.cartName}>
-                  {item.name} × {Number(item.quantity) || 1} —{" "}
+                  {language === "ja" ? item.name_ja : item.name_en} ×{" "}
+                  {Number(item.quantity) || 1} —{" "}
                   {item.price * (Number(item.quantity) || 1)}円
                 </p>
                 <button
                   className={styles.removeButton}
                   onClick={() => removeFromCart(i)}
                 >
-                  削除
+                  {language === "ja" ? "削除" : "Remove"}
                 </button>
               </div>
             ))}
-            <p className={styles.total}>合計: {totalAmount}円(税込)</p>
+            <p className={styles.total}>
+              {language === "ja" ? "合計" : "Total"}: {totalAmount}円(
+              {language === "ja" ? "税込" : "Tax included"})
+            </p>
             <button
               className={styles.confirmButton}
               onClick={handleConfirmOrder}
             >
-              注文を確定する
+              {language === "ja" ? "注文を確定する" : "Confirm Order"}
             </button>
             <button className={styles.clearCartButton} onClick={clearCart}>
-              カートを全て削除
+              {language === "ja" ? "カートを全て削除" : "Clear Cart"}
             </button>
           </>
         )}
       </aside>
+
       {isConfirmed && (
         <div className={styles.modalOverlay}>
           <div className={styles.modal}>
             <h1 className={styles.modalTitle}>
-              ありがとうございました！またお越しください。
+              {language === "ja"
+                ? "ありがとうございました！またお越しください。"
+                : "Thank you! Please come again."}
             </h1>
             <button className={styles.backButton} onClick={handleBackToMenu}>
-              メニューに戻る
+              {language === "ja" ? "メニューに戻る" : "Back to Menu"}
             </button>
           </div>
         </div>
